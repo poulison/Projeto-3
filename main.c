@@ -43,6 +43,15 @@ int main() {
     case 6:
       filtrodetarefasS(&lt);
       break;
+    case 7:
+      exportaprioridade(&lt);
+      break;
+    case 8:
+      exportacategoria(&lt);
+      break;
+    case 9:
+      exportacatpri(&lt);
+      break;
       
     // Opção sair
     case 0:

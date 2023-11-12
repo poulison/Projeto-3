@@ -37,6 +37,12 @@ int filtrodetarefasI(ListaDetarefas *lt);
 
 int filtrodetarefasS(ListaDetarefas *lt);
 
+int exportaprioridade(ListaDetarefas *lt);
+
+int exportacategoria(ListaDetarefas *lt);
+
+int exportacatpri(ListaDetarefas *lt);
+
 //  Função que imprime o menu
 void printMenu();
 // Função que salva a lista de tarefas no arquivo

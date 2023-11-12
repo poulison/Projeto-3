@@ -82,7 +82,6 @@ int listartarefa(ListaDetarefas lt) {
 
   return 0;
 }
-//--------------------------------------------
 
 //---------------------------------------------
 int alterartarefa(ListaDetarefas *lt) {
@@ -231,6 +230,7 @@ int filtrodetarefasI(ListaDetarefas *lt) {
 }
 //--------------------------------------------------------------
 int filtrodetarefasS(ListaDetarefas *lt) {
+  printf("-Filtrar por categoria e prioridade.\n");
   // Filtra por prioridade e categoria
   int prioridadedesejada;
   char categoriadesejada[30];
@@ -252,14 +252,87 @@ int filtrodetarefasS(ListaDetarefas *lt) {
          lt->l[i].descricao, lt->l[i].prioridade,lt->l[i].estado);
     }
   }
+  return 0;
+}
+//-------------------------------
+// funcao que exporta a tarefa com base na prioridade dela
+int exportaprioridade(ListaDetarefas *lt){
+  printf("-Exportar por prioridade.\n");
+  FILE *f =fopen("exportar.txt", "w");  //abre o arquivo
+  int prioridade; // declara variavel da prioridade
+  printf("\nPrioridade desejada: "); //recebe e le a prioridade desejada
+  scanf("%d",&prioridade);
+  for (int i = 0; i < lt->qtd; i++) { // Percorre a lista de tarefas
+    if (lt->l[i].prioridade == prioridade) {// Verifica se a prioridade da tarefa é igual à prioridade especificada
+      // Imprime a Tarefa no arquivo
+      fprintf(f, "Tarefa %d, Prioridade:%d, Categoria:%s, Estado:%s, Descricao:%s\n", i + 1,
+       lt->l[i].prioridade, lt->l[i].categoria, lt->l[i].estado,
+       lt->l[i].descricao);
+    }
+  }
+  return 0;
+}
+//-------------------------------
+//funcao que exporta a tarefa com base na categoria 
+int exportacategoria(ListaDetarefas *lt){
+  
+  printf("-Exportar por categoria e prioridade.\n");
+  FILE *f =fopen("exportar.txt", "w");  //abre o arquivo 
+  char categoria[30]; // variavel que recebe a categoria desejada
+  int c;                                            //limpa o buffer
+  while ((c = getchar()) != '\n' && c != EOF) {}
+  printf("\nCategoria desejada: ");  
+  fgets(categoria, 30, stdin); //recebe e le a categoria 
+  categoria[strcspn(categoria, "\n")] = '\0';
+
+  for (int t = 10; t > -1; t--){ //percorre a lista de tarefas
+    for (int i = 0; i < lt->qtd; i++) { //percorre a lista de lembretes
+      int Vcat = strcmp(lt->l[i].categoria, categoria); //compara a categoria com a categoria desejada
+      if (lt->l[i].prioridade == t) { //verifica se a prioridade da tarefa é igual à prioridade desejada
+      if (Vcat == 0){ //verifica se a categoria da tarefa é igual à categoria desejada
+        // Imprime a tarefa no lembrete
+        fprintf(f, "Tarefa %d, Prioridade:%d, Categoria:%s, Estado:%s, Descricao:%s\n", i + 1,
+         lt->l[i].prioridade, lt->l[i].categoria, lt->l[i].estado,
+         lt->l[i].descricao);
+        }
+
+      }
+    }
+    
+  }
+  return 0;
 }
 
-
+//-------------------------------
+// funcao que exporta as tarefas com base na sua prioridade e categoria
+int exportacatpri(ListaDetarefas *lt){
+printf("-Exportar por categoria.\n");
+FILE *f =fopen("exportar.txt", "w"); //abre o arquivo que armazenara as tarefas exportadas
+int prioridadedesejada; //declara variavel que recebe a prioridade
+char categoriadesejada[30]; //declara a variavel que recebe a categoria
+  printf("\nPrioridade desejada: ");   //recebe e le a prioridade desejada
+  scanf("%d", &prioridadedesejada); 
+  printf("\nCategoria desejada: ");//recebe a catedoria desejada
+  int c; 
+  while ((c = getchar()) != '\n' && c != EOF) {} //limpa o buffer
+  fgets(categoriadesejada, 30, stdin); // Lê a categoria desejada
+  categoriadesejada[strcspn(categoriadesejada, "\n")] = '\0'; // remove o \n do final da string
+  for (int i = 0; i < lt->qtd; i++) {  // Percorre a lista de lembretes
+    if (lt->l[i].prioridade == prioridadedesejada && // Verifica se a prioridade e a categoria da tarefa são iguais à prioridade e categoria desejadas
+      strcmp(lt->l[i].categoria, categoriadesejada) == 0) { //
+      // Imprime a tarefa dentro do arquivo na ordem requisitada
+      fprintf(f, "Tarefa %d, Prioridade:%d, Categoria:%s, Estado:%s, Descricao:%s\n", i + 1,
+       lt->l[i].prioridade, lt->l[i].categoria, lt->l[i].estado,
+       lt->l[i].descricao);
+    }
+  }
+  return 0;
+}
 // Função que imprime o menu
 void printMenu() {
-  printf("\n======= Menu =======\n1. Criar tarefa\n2. Deletar tarefa\n3. "
-         "Listar tarefas. \n4. Alterar tarefas"". \n5. Filtrar tarefas de maneira singular. \n6. Filtrar tarefas a partir de Prioridade e Categoria"
-         "\n0. Sair\n====================\n");
+  printf("\n================== Menu ========================\n1. Criar tarefa\n2. Deletar tarefa\n3. "
+         "Listar tarefas. \n4. Alterar tarefas"". \n5. Filtrar tarefas de maneira singular. \n6. Filtrar tarefas a partir de Prioridade e Categoria\n7. Exportar tarefa por prioridade\n8. Exportar tarefa por categoria \n9. Exportar tarefa por categoria e prioridade"
+         "\n0. Sair\n================================================\n");
 }
 // Função que salva a lista em um arquivo
 int salvarLista(ListaDetarefas lt, char nome[]) {
