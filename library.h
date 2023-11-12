@@ -33,6 +33,10 @@ int listartarefa(ListaDetarefas lt);
 // Função para alterar os tarefas
 int alterartarefa(ListaDetarefas *lt);
 
+int filtrodetarefasI(ListaDetarefas *lt);
+
+int filtrodetarefasS(ListaDetarefas *lt);
+
 //  Função que imprime o menu
 void printMenu();
 // Função que salva a lista de tarefas no arquivo
