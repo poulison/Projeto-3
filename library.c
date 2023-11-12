@@ -2,172 +2,181 @@
 #include "string.h"
 #include <stdio.h>
 
+
+
 // Função que adiciona tarefas
-int criartarefa(ListaDetarefas *ll) {
-  printf("\nNovo tarefa\n");
-  printf("Prioridade: ");
-  // Recebe a entrada do usuário e armazena no array da opção prioridade
-  scanf("%d", &ll->l[ll->qtd].prioridade);
-  // Limpa o buffer
+int criartarefa(ListaDetarefas *lt) {
+  printf("Crie uma tarefa\n");
+
+  printf("\nPrioridade: ");
+  scanf("%d", &lt->l[lt->qtd].prioridade);
   int c;
   while ((c = getchar()) != '\n' && c != EOF) {
   }
   printf("Categoria: ");
-  // Recebe a entrada do usuário e armazena no array da opção categoria
-  gets(ll->l[ll->qtd].categoria);
-  // Substitui qualquer caractere que não seja letra, no caso \n, por \0 para
-  // simbolizar o final da string
-  ll->l[ll->qtd].categoria[strcspn(ll->l[ll->qtd].categoria, "\n")] = '\0';
-  printf("Descricao: ");
-  // Recebe a entrada do usuário e armazena no array da opção descrição
-  gets(ll->l[ll->qtd].descricao);
+  fgets(lt->l[lt->qtd].categoria, 10,
+        stdin); // escanea a categoria que o usuario digitou
+  lt->l[lt->qtd].categoria[strcspn(lt->l[lt->qtd].categoria, "\n")] = '\0';
 
-  printf("Progresso: ");
-  // Recebe a entrada do usuário e armazena no array da opção progresso
-  gets(ll->l[ll->qtd].progresso);
-  // Substitui qualquer caractere que não seja letra, no caso \n, por \0 para
-  // simbolizar o final da string
-  ll->l[ll->qtd].descricao[strcspn(ll->l[ll->qtd].descricao, "\n")] = '\0';
-  // Aumenta a quantidade/número do tarefa
-  ll->qtd = ll->qtd + 1;
+  printf("Descricao: ");
+  fgets(lt->l[lt->qtd].descricao, 30,
+        stdin); // escanea a descricao que o usuario digitou
+  lt->l[lt->qtd].descricao[strcspn(lt->l[lt->qtd].descricao, "\n")] = '\0';
+
+  printf("estado(Completo/Em andamento/Não iniciado): ");
+  fgets(lt->l[lt->qtd].estado, sizeof(lt->l[lt->qtd].estado), stdin);
+  lt->l[lt->qtd].estado[strcspn(lt->l[lt->qtd].estado, "\n")] = '\0';
+
+  lt->qtd = lt->qtd + 1;
+
   return 0;
 }
 
 // Função que deleta tarefas
-int deletartarefa(ListaDetarefas *ll) {
+int deletartarefa(ListaDetarefas *lt) {
   printf("\nDeletar tarefa\n");
   // Erro caso não exista tarefas
-  if (ll->qtd == 0) {
+  if (lt->qtd == 0) {
     printf("Nao ha tarefas, crie um");
+    return 0;
   }
   // Variável do numero do tarefa desejado
-  int numerodotarefa;
+  int numerodatarefa;
   printf("\nNumero do tarefa: ");
   // Recebe o numero do tarefa e armazena na variável
-  scanf("%d", &numerodotarefa);
+  scanf("%d", &numerodatarefa);
   // Verifica se o tarefa existe dentre os já existentes
-  if (numerodotarefa < 1 || numerodotarefa > ll->qtd) {
+  if (numerodatarefa < 1 || numerodatarefa > lt->qtd) {
     printf("Esse tarefa nao existe");
   }
   // Caso exista tarefas e o número do tarefa exista...
   else {
     // Loop que percorre os elementos da lista
-    for (int i = numerodotarefa; i < ll->qtd; i++) {
+    for (int i = numerodatarefa; i < lt->qtd; i++) {
       // Atribui o valor do tarefa seguinte ao tarefa desejado
-      ll->l[i] = ll->l[i + 1];
+      lt->l[i] = lt->l[i + 1];
     }
     // Diminui o número de tarefas
-    ll->qtd--;
-    printf("\ntarefa %d deletado", numerodotarefa);
+    lt->qtd--;
+    printf("\ntarefa %d deletado", numerodatarefa);
   }
   return 0;
 }
 
 // Função que lista os tarefas
-int listartarefa(ListaDetarefas ll) {
+int listartarefa(ListaDetarefas lt) {
   printf("\nLista de tarefa\n");
   // Loop que percorre os elementos da lista e imprime eles
-  for (int i = 0; i < ll.qtd; i++) {
-    printf("\n%d. %s: %s (Prioridade: %d)\n", i + 1, ll.l[i].categoria,
-           ll.l[i].descricao, ll.l[i].prioridade, ll.l[i].progresso);
+  for (int i = 0; i < lt.qtd; i++) {
+    printf("\n%d. %s: %s (Prioridade: %d, estado: %s)\n", i + 1,
+           lt.l[i].categoria, lt.l[i].descricao, lt.l[i].prioridade,
+           lt.l[i].estado); // updated printf statement
+  }
+
+  return 0;
+}
+
+int procuratarefa(ListaDetarefas lt, int qtd) {
+  int local = 0;
+  while (local < lt.qtd && lt.l[local].numero != qtd) {
+    local++;
+  }
+  return local == lt.qtd ? 0 : local;
+}
+
+
+int alterartarefa(ListaDetarefas *lt) {
+  printf("\n-Alterar tarefa\n");
+
+  int numerodatarefa;
+  printf("\nNumero da tarefa: ");
+  scanf("%d", &numerodatarefa);
+  int Ntarefa = procuratarefa(*lt, numerodatarefa);
+  if (Ntarefa == -1) {
+    printf("\nEssa tarefa não existe\n");
+    return 0;
+  }
+ 
+  int alteração;
+  printf("\nSelecione a alteracao que deseja realizar\n1. Prioridade\n2. Categoria\n3. Descrição "
+     "\n4. Estado\nopcao: ");
+  scanf("%d", &alteração);
+  int c;
+  switch (alteração) {
+  case 1:
+    printf("\nPrioridade: ");
+    scanf("%d", &lt->l[Ntarefa].prioridade);
+    printf("\nPrioridade alterada\n");
+    break;
+  case 2:
+    printf("\nCategoria: ");
+    void limpar();
+    fgets(lt->l[Ntarefa].categoria, sizeof(lt->l[Ntarefa].categoria),
+          stdin);
+    lt->l[Ntarefa].categoria[strcspn(lt->l[Ntarefa].categoria, "\n")] =
+        '\0';
+    printf("\nCategoria alterada\n");
+    break;
+  case 3:
+    printf("\nDescrição: ");
+    void limpar();
+    fgets(lt->l[Ntarefa].descricao, sizeof(lt->l[Ntarefa].descricao),
+          stdin);
+    lt->l[Ntarefa].descricao[strcspn(lt->l[Ntarefa].descricao, "\n")] =
+        '\0';
+    printf("\nDescrição alterada\n");
+    break;
+  case 4:
+    printf("\nEstado: ");
+    void limpar();
+    fgets(lt->l[Ntarefa].estado, sizeof(lt->l[Ntarefa].estado), stdin);
+    lt->l[Ntarefa].estado[strcspn(lt->l[Ntarefa].estado, "\n")] = '\0';
+    printf("\nEstado alterado\n");
+    break;
+  default:
+    printf("\nOpção inválida\n");
+    break;
   }
   return 0;
 }
 
-// Função para alterar os tarefas
-int alterartarefa(ListaDetarefas *ll) {
-  printf("\nAlterar tarefa\n");
-  // Erro caso não exista tarefas
-  if (ll->qtd == 0) {
-    printf("Nao ha tarefas, crie um");
+// Função que imprime o menu
+void printMenu() {
+  printf("\n======= Menu =======\n1. Criar tarefa\n2. Deletar tarefa\n3. "
+         "Listar tarefas. \n4. Alterar tarefas"
+         "\n0. Sair\n====================\n");
+}
+// Função que salva a lista em um arquivo
+int salvarLista(ListaDetarefas lt, char nome[]) {
+  // Abre o arquivo
+  FILE *f = fopen(nome, "wb");
+  // Verifica se o arquivo foi aberto
+  if (f == NULL) {
+    return 1;
   }
-  // Variável do numero do tarefa desejado
-  int numerodotarefa;
-  printf("\nNumero do tarefa: ");
-  // Recebe o numero do tarefa e armazena na variável
-  scanf("%d", &numerodotarefa);
-  // Verifica se o tarefa existe dentre os já existentes
-  if (numerodotarefa < 1 || numerodotarefa > ll->qtd) {
-    printf("Esse tarefa nao existe");
+  // Escreve a lista no arquivo
+  fwrite(&lt, sizeof(ListaDetarefas), 1, f);
+  // Fecha o arquivo
+  fclose(f);
+  return 0;
+}
+int carregarLista(ListaDetarefas *lt, char nome[]) {
+  // Abre o arquivo
+  FILE *f = fopen(nome, "rb");
+  // Verifica se o arquivo foi aberto
+  if (f == NULL) {
+    return 1;
   }
-  // Caso exista tarefas e o número do tarefa exista...
-  else {
-    // Variável do numero da categoria desejada
-    int categoria;
-    printf("\nCategoria: ");
-    // Recebe o numero da categoria e armazena na variável
-    scanf("%d", &categoria);
-    // Verifica se a categoria existe dentre as existentes
-    if (categoria < 1 || categoria > ll->qtd) {
-      printf("Essa categoria nao existe");
-      return 0;
-      // Caso exista categoria e o número da categoria exista...
-      else {
-        // Variável da descrição desejada
-        char descricao[100];
-        printf("\nDescricao: ");
-        // Recebe a descrição e armazena na variável
-        scanf("%s", descricao);
-        // Variável da prioridade desejada
-        int prioridade;
-        printf("\nPrioridade: ");
-        // Recebe a prioridade e armazena na variável
-        scanf("%d", &prioridade);
-        // Variável do progresso desejado
-        int progresso;
-        printf("\nProgresso: ");
-        // Recebe o progresso e armazena na variável
-        scanf("%d", &progresso);
-        // Atribui os valores dos campos do tarefa desejado
-        ll->l[numerodotarefa - 1].categoria = categoria;
-        ll->l[numerodotarefa - 1].descricao = descricao;
-        ll->l[numerodotarefa - 1].prioridade = prioridade;
-        ll->l[numerodotarefa - 1].progresso = progresso;
-        printf("\ntarefa %d alterado", numerodotarefa);
-        return 0;
-      }
+  // Lê o que está escrito no arquivo
+  fread(lt, sizeof(ListaDetarefas), 1, f);
+  // Fecha o arquivo
+  fclose(f);
+  return 0;
+}
 
-      // Função que imprime o menu
-      void printMenu() {
-        printf("\n======= Menu =======\n1. Criar tarefa\n2. Deletar "
-               "tarefa\n3. "
-               "Listar tarefas\n0. Sair\n====================\n");
-      }
-      // Função que salva a lista em um arquivo
-      int salvarLista(ListaDetarefas ll, char nome[]) {
-        // Abre o arquivo
-        FILE *f = fopen(nome, "wb");
-        // Verifica se o arquivo foi aberto
-        if (f == NULL) {
-          return 1;
-        }
-        // Escreve a lista no arquivo
-        fwrite(&ll, sizeof(ListaDetarefas), 1, f);
-        // Fecha o arquivo
-        fclose(f);
-        return 0;
-      }
-      int carregarLista(ListaDetarefas * ll, char nome[]) {
-        // Abre o arquivo
-        FILE *f = fopen(nome, "rb");
-        // Verifica se o arquivo foi aberto
-        if (f == NULL) {
-          return 1;
-        }
-        // Lê o que está escrito no arquivo
-        fread(ll, sizeof(ListaDetarefas), 1, f);
-        // Fecha o arquivo
-        fclose(f);
-        return 0;
-      }
+void limpar() {
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF) {
+  }
+}
 
-      //funcao de listar por prioridade
-      int listarprioridade(ListaDetarefas ll) {
-        printf("\nTarefas prioritarias\n");
-        // Loop que percorre os elementos da lista e imprime eles
-        for (int i = 0; i < ll.qtd; i++) {
-          printf("\n%d. %s: %s (Prioridade: %d)\n", i + 1, ll.l[i].categoria,
-                 ll.l[i].descricao, ll.l[i].prioridade, ll.l[i].progresso);
-        }
-        return 0;
-      }

@@ -5,13 +5,13 @@ int main() {
   int cod;
   char arquivo[] = "ListaDetarefas";
   // Criando uma variável do tipo ListaDetarefas
-  ListaDetarefas ll;
+  ListaDetarefas lt;
 
   // Chamando a função carregar para carregar a lista do arquivo
-  cod = carregarLista(&ll, arquivo);
+  cod = carregarLista(&lt, arquivo);
   if (cod == 1)
     // Quatidade de tarefas
-    ll.qtd = 0;
+    lt.qtd = 0;
   // Variável das opções do menu
   int opcao;
   // Inicio do loop do menu até o usuário digitar 0
@@ -24,18 +24,18 @@ int main() {
     switch (opcao) {
     // Opção criar
     case 1:
-      criartarefa(&ll);
+      criartarefa(&lt);
       break;
     // Opção deletar
     case 2:
-      deletartarefa(&ll);
+      deletartarefa(&lt);
       break;
     // Opção listar
     case 3:
-      listartarefa(ll);
+      listartarefa(lt);
       break;
     case 4:
-      alterartarefa(ll);
+      alterartarefa(&lt);
       break;
     // Opção sair
     case 0:
@@ -47,7 +47,7 @@ int main() {
     // Loop para repetir o menu até que o usuário digitar 0
   } while (opcao != 0);
   // Chamando a função salvar para armazenar a lista no arquivo
-  cod = salvarLista(ll, arquivo);
+  cod = salvarLista(lt, arquivo);
   // Caso a função retornar um erro
   if (cod != 0)
     printf("Erro ao salvar as tarefas");
