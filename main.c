@@ -37,6 +37,13 @@ int main() {
     case 4:
       alterartarefa(&lt);
       break;
+    case 5:
+      filtrodetarefasI(&lt);
+      break;
+    case 6:
+      filtrodetarefasS(&lt);
+      break;
+      
     // Opção sair
     case 0:
       break;
