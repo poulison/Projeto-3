@@ -34,25 +34,31 @@ int main() {
     case 3:
       listartarefa(lt);
       break;
+    // Opção Alterar tarefa
     case 4:
       alterartarefa(&lt);
       break;
+    // Opção Filtrar tarefa por prioridade,categoria e estado
     case 5:
       filtrodetarefasI(&lt);
       break;
+    // Opção filtrar categoria por prioridade e categoria simultaneamente
     case 6:
       filtrodetarefasS(&lt);
       break;
+    // Opção Exportar tarefa por prioridade
     case 7:
       exportaprioridade(&lt);
       break;
+    // Opção Exportar tarefa por categoria
     case 8:
       exportacategoria(&lt);
       break;
+    // Opção Exportar tarefa por categoria e prioridade simultaneamente
     case 9:
       exportacatpri(&lt);
       break;
-      
+
     // Opção sair
     case 0:
       break;
